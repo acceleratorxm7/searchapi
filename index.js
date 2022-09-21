@@ -12,7 +12,8 @@ app.get("/options", async function(req, res) {
 })
 
 app.get("/search", async function(req, res) { 
-    let result = await connection.query(`SELECT * FROM category WHERE category1='${req.category1}' AND category2='${req.category2}' AND category3='${req.category3}' AND category4='${req.category4}' AND category5='${req.category5}'`);
+    console.log(req.query);
+    let result = await connection.query(`SELECT * FROM category WHERE category1='${req.query.category1}' AND category2='${req.query.category2}' AND category3='${req.query.category3}' AND category4='${req.query.category4}' AND category5='${req.query.category5}'`);
 
     res.send(result[0]);
 })
