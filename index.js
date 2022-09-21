@@ -21,7 +21,10 @@ app.get("/options", async function(req, res) {
 });
 
 app.get("/search", async function(req, res) { 
-    let queryString = "SELECT * FROM category";
+    let headerString = "SELECT * FROM category";
+    let conditionString = "SELECT * FROM category";
+    let itemString = "SELECT * FROM category";
+
     let andOp = false; 
     let category1 = req.query.category1 ? req.query.category1: '';
     let category2 = req.query.category2 || '';
@@ -33,63 +36,87 @@ app.get("/search", async function(req, res) {
 
     if(category1.length > 0) {
         if(!andOp) {
-            queryString += " WHERE ";
+            headerString += " WHERE ";
+            conditionString += " WHERE ";
+            itemString += " WHERE ";
             andOp = true;
         }else {
-            queryString += " AND "
+            headerString += " AND "
+            conditionString += " AND ";
+            itemString += " AND ";
         }
-        queryString += `category1="${category1}"`;
-
+        headerString += `category1="${category1}"`;
+        conditionString += `category1="${category1}"`;
+        itemString += `category1="${category1}"`;
     }
 
 
     if(category2.length > 0) {
         if(!andOp) {
-            queryString += " WHERE ";
+            headerString += " WHERE ";
+            conditionString += " WHERE ";
+            itemString += " WHERE ";
             andOp = true;
         }else {
-            queryString += " AND "
+            headerString += " AND "
+            conditionString += " AND ";
+            itemString += " AND ";
         }
-        queryString += `category2="${category2}"`;
-
+        headerString += `category2="${category2}"`;
+        conditionString += `category2="${category2}"`;
+        itemString += `category2="${category2}"`;
     }
 
     if(category3.length > 0) {
         if(!andOp) {
-            queryString += " WHERE ";
+            headerString += " WHERE ";
+            conditionString += " WHERE ";
+            itemString += " WHERE ";
             andOp = true;
         }else {
-            queryString += " AND "
+            headerString += " AND "
+            conditionString += " AND ";
+            itemString += " AND ";
         }
-        queryString += `category3="${category3}"`;
-
+        headerString += `category3="${category3}"`;
+        conditionString += `category3="${category3}"`;
+        itemString += `category3="${category3}"`;
     }
 
     if(category4.length > 0) {
         if(!andOp) {
-            queryString += " WHERE ";
+            conditionString += " WHERE ";
+            itemString += " WHERE ";
             andOp = true;
         }else {
-            queryString += " AND "
+            conditionString += " AND ";
+            itemString += " AND ";
         }
-        queryString += `category4="${category4}"`;
-
+        conditionString += `category4="${category4}"`;
+        itemString += `category4="${category4}"`;
     }
 
     if(category5.length > 0) {
         if(!andOp) {
-            queryString += " WHERE ";
+            itemString += " WHERE ";
             andOp = true;
         }else {
-            queryString += " AND "
+            itemString += " AND "
         }
-        queryString += `category5="${category5}"`;
+        itemString += `category5="${category5}"`;
     }
 
+    headerString += ` AND type="Header"`;
+    conditionString += ` AND type="Condition"`;
+    itemString += ` AND type="Item"`;
 
-    let result = await connection.query(queryString);
+    let header = (await connection.query(headerString))[0];
+    let condition = (await connection.query(conditionString))[0];
+    let item = (await connection.query(itemString))[0];
 
-    res.send(result[0]);
+    console.log(header, condition, item);
+    let wrapper = [header, condition, item];
+    res.send(wrapper);
 })
 
 app.listen(8080);
